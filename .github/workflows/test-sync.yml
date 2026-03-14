@@ -1,0 +1,41 @@
+name: Test Sync Scripts
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
+
+jobs:
+  validate-scripts:
+    name: "Validate Bash Syntax and Dry Run Execution"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check Bash Syntax (ShellCheck)
+        run: |
+          sudo apt-get install shellcheck
+          shellcheck sync_agents.sh
+
+      - name: Scaffold Mock File Structure
+        run: |
+          # Create fake source structure mirroring macOS just for the dry run test
+          mkdir -p ~/.gemini/antigravity
+          mkdir -p ~/.codex
+          mkdir -p ~/Library/Application\ Support/Code/User/
+          touch ~/.zshrc
+          touch ~/.gitconfig
+
+      - name: Execute Dry Run Synchronization
+        run: |
+          # Test executing the script locally targeting 'localhost' just to assert logic.
+          # Must use dry-run otherwise SSH will reject without keys setup on runner.
+          chmod +x sync_agents.sh
+          ./sync_agents.sh -d dummy_user@localhost
+
+      - name: Report Status
+        run: echo "Sync script syntax and dry run logic executed flawlessly."

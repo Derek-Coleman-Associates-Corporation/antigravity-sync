@@ -21,6 +21,15 @@ To ensure your agent experience is identical across all machines, you should foc
 1. **`config.toml`**: The master configuration file for Codex. It defines your LLM backend providers, context window limits, and UI preferences.
 2. **`rules/` and `skills/`**: Just like Antigravity, Codex relies heavily on customized python skills and markdown rules to understand your specific commercial engineering environment.
 
+### VS Code & Terminal (`~/Library/Application Support/Code/User/`)
+Your VS Code settings (`settings.json`), snippets, and keybindings are stored locally. Syncing these ensures your editor looks and behaves exactly the same. 
+*(Note: VS Code also has a built-in "Settings Sync" feature via your GitHub/Microsoft account which syncs Extensions as well).*
+
+## App Data vs. iCloud Limitations (Why Outlook Doesn't Sync)
+While iCloud seamlessly synchronizes your `Documents` and `Desktop` files, it **intentionally ignores Application Support data and encrypted credentials**. 
+When you set up an app like **Microsoft Outlook**, the application registers your secure authentication tokens directly into the **macOS Keychain**, which is hardware-bound to that specific Mac's Secure Enclave Processor (SEP). 
+Rsyncing or iCloud-syncing Outlook's database files (in `~/Library/Group Containers/`) to another Mac will immediately corrupt the profile because the destination Mac's Secure Enclave cannot decrypt the hardware-locked keychain tokens. You must natively sign in to secure apps on new devices.
+
 ## Usage
 1. Clone this repo on your primary Mac.
 2. Make the script executable: `chmod +x sync_agents.sh`

@@ -41,23 +41,24 @@ fi
 
 ANTIGRAVITY_DIR="$HOME/.gemini/antigravity/"
 CODEX_DIR="$HOME/.codex/"
+VSCODE_DIR="$HOME/Library/Application Support/Code/User/"
 
 echo "============================================================"
-echo "Synchronizing Neural States to: $TARGET_HOST"
+echo "Synchronizing Neural States & Dev Environments to: $TARGET_HOST"
 if [ -n "$DRY_RUN" ]; then
     echo "MODE: DRY RUN (No files will be modified)"
 fi
 echo "============================================================"
 
 # Ensure remote directories exist
-ssh "$TARGET_HOST" "mkdir -p $ANTIGRAVITY_DIR $CODEX_DIR"
+ssh "$TARGET_HOST" "mkdir -p '$ANTIGRAVITY_DIR' '$CODEX_DIR' '$VSCODE_DIR'"
 
 # 1. Sync Antigravity
-echo "[1/2] Syncing Antigravity Engine (~/.gemini/antigravity)..."
+echo "[1/4] Syncing Antigravity Engine (~/.gemini/antigravity)..."
 rsync -avz $DRY_RUN --delete --exclude="scratch" "$ANTIGRAVITY_DIR" "${TARGET_HOST}:${ANTIGRAVITY_DIR}"
 
 # 2. Sync Codex
-echo "[2/2] Syncing Codex Architecture (~/.codex)..."
+echo "[2/4] Syncing Codex Architecture (~/.codex)..."
 # Exclude giant SQLite databases unless you strictly want to overwrite the remote state.
 # We include config.toml, rules, skills, auth.json, and workflows.
 rsync -avz $DRY_RUN \
@@ -67,6 +68,19 @@ rsync -avz $DRY_RUN \
     --exclude="archived_sessions" \
     --exclude="tmp" \
     "$CODEX_DIR" "${TARGET_HOST}:${CODEX_DIR}"
+
+# 3. Sync VS Code Configuration
+echo "[3/4] Syncing VS Code Settings (User/settings.json, snippets, keybindings)..."
+rsync -avz $DRY_RUN \
+    --exclude="workspaceStorage" \
+    --exclude="globalStorage" \
+    "$VSCODE_DIR" "${TARGET_HOST}:${VSCODE_DIR}"
+
+# 4. Sync Base Terminal Profiles
+echo "[4/4] Syncing ZSH and Dotfiles (~/.zshrc, ~/.gitconfig)..."
+# Only sync if the files exist
+[ -f "$HOME/.zshrc" ] && rsync -avz $DRY_RUN "$HOME/.zshrc" "${TARGET_HOST}:$HOME/.zshrc"
+[ -f "$HOME/.gitconfig" ] && rsync -avz $DRY_RUN "$HOME/.gitconfig" "${TARGET_HOST}:$HOME/.gitconfig"
 
 echo "============================================================"
 if [ -n "$DRY_RUN" ]; then

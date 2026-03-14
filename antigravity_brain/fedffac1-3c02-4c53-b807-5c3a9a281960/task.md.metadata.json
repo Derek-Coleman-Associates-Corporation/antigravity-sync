@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_TASK",
+  "summary": "Identified that conversation history is safe and stored in ~/.gemini/antigravity/conversations, not the brain directory. Recreated the missing brain target directory to fix the symlink.",
+  "updatedAt": "2026-03-14T04:09:41.569752Z"
+}

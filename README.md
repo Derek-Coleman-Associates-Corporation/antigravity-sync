@@ -51,17 +51,17 @@ However, the raw conversation data (your chats and history) is stored natively a
 
 ### Backing Up Raw Conversation History
 
-If you wish to fully back up your raw conversation transcripts (the `.pb` files normally stored in `~/.gemini/antigravity/conversations`), you can manually copy and sync them to this repository:
+If you wish to fully back up your raw conversation transcripts (the `.pb` files normally stored in `~/.gemini/antigravity/conversations`), you can architect the identical cloud symlink topology so your Mac reads its history straight from iCloud:
 
 ```bash
-# Copy the raw conversation files into the sync repository
-cp -R ~/.gemini/antigravity/conversations ~/Documents/GitHub/antigravity-sync/antigravity_conversations
+# 1. Copy the Mac Studio's existing chat history databases securely into iCloud
+cp -R ~/.gemini/antigravity/conversations/* ~/Documents/GitHub/antigravity-sync/antigravity_conversations/
 
-# Commit and push the updated history
-cd ~/Documents/GitHub/antigravity-sync
-git add antigravity_conversations
-git commit -m "backup: sync raw conversation history"
-git push origin master
+# 2. Delete the old local folder now that they are backed up in iCloud
+rm -rf ~/.gemini/antigravity/conversations
+
+# 3. Create the symlink so the Mac Studio reads its history straight from iCloud
+ln -s ~/Documents/GitHub/antigravity-sync/antigravity_conversations ~/.gemini/antigravity/conversations
 ```
 
-**Note:** Conversation histories can grow large over time (e.g., 90MB+). You may need to increase your Git HTTP buffer size (`git config http.postBuffer 524288000`) before pushing if you encounter HTTP 400 timeout errors.
+**Note:** Conversation histories can grow large over time (e.g., 90MB+). They are constantly appended in real-time while you chat with agents.

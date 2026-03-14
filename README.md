@@ -34,3 +34,17 @@ ln -s "$HOME/Library/Mobile Documents/com~apple~CloudDocs/AntigravityBrain" ~/.g
 
 ### End Result:
 If you execute those commands on both physical machines, you will have successfully architected a fully autonomous, real-time multi-node memory matrix! You can seamlessly close one Mac, boot up the other, and the agent will mathematically pick up explicitly where you left off on the exact same session state!
+
+## Troubleshooting
+
+### Accidental Deletion of `~/.gemini/antigravity/brain`
+If you accidentally run `rm -rf ~/.gemini/antigravity/brain`, **your core conversation history is safe.**
+
+Because `~/.gemini/antigravity/brain` is typically a symlink pointing to your repository (or iCloud Drive), running `rm -rf` on the symlink will traverse and delete the target folder (e.g., the `antigravity_brain` folder in this repo), leaving the symlink broken. 
+
+However, the raw conversation data (your chats and history) is stored natively as Protocol Buffer (`.pb`) files in `~/.gemini/antigravity/conversations`, which is completely separate and untouched.
+
+**To recover:**
+1. Recreate the missing target directory where the symlink pointed (e.g., `mkdir ~/Documents/GitHub/antigravity-sync/antigravity_brain`).
+2. The symlink will instantly resolve itself and the agent will be fully operational again. 
+3. Note: While raw chat text is safe, any generated *artifacts* (e.g., `task.md`, `implementation_plan.md`) that lived inside the deleted brain folder are lost unless you restore the folder from a backup.

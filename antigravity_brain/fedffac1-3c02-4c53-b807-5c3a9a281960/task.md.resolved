@@ -5,3 +5,4 @@
 - [x] Identify location of conversation history vs artifacts
 - [x] Recreate missing target directory for the `brain` symlink
 - [x] Notify user of the findings
+- [x] Add troubleshooting info to antigravity-sync README.md

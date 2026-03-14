@@ -48,3 +48,20 @@ However, the raw conversation data (your chats and history) is stored natively a
 1. Recreate the missing target directory where the symlink pointed (e.g., `mkdir ~/Documents/GitHub/antigravity-sync/antigravity_brain`).
 2. The symlink will instantly resolve itself and the agent will be fully operational again. 
 3. Note: While raw chat text is safe, any generated *artifacts* (e.g., `task.md`, `implementation_plan.md`) that lived inside the deleted brain folder are lost unless you restore the folder from a backup.
+
+### Backing Up Raw Conversation History
+
+If you wish to fully back up your raw conversation transcripts (the `.pb` files normally stored in `~/.gemini/antigravity/conversations`), you can manually copy and sync them to this repository:
+
+```bash
+# Copy the raw conversation files into the sync repository
+cp -R ~/.gemini/antigravity/conversations ~/Documents/GitHub/antigravity-sync/antigravity_conversations
+
+# Commit and push the updated history
+cd ~/Documents/GitHub/antigravity-sync
+git add antigravity_conversations
+git commit -m "backup: sync raw conversation history"
+git push origin master
+```
+
+**Note:** Conversation histories can grow large over time (e.g., 90MB+). You may need to increase your Git HTTP buffer size (`git config http.postBuffer 524288000`) before pushing if you encounter HTTP 400 timeout errors.

@@ -1,0 +1,28 @@
+# ~/.codex/config.toml
+# Master Codex Desktop Configuration
+
+[agent]
+# Primary model routing
+primary_model = "gpt-4o"
+fallback_model = "gpt-4-turbo"
+
+# Memory and Context
+max_context_tokens = 120000
+enable_sqlite_history = true
+
+[workspace]
+# Default paths
+# Ensure the secondary Mac has these identical folder paths created
+default_directory = "/Users/derekcoleman/Documents/GitHub"
+
+[azure]
+# Link Codex specifically to the new Azure ML backend we just built
+use_managed_identity = false
+openai_endpoint = "https://oai-sxhic5lc2tly4.openai.azure.com/"
+
+[skills]
+# Always load these directories
+auto_load_paths = [
+    "/Users/derekcoleman/.codex/skills",
+    "/Users/derekcoleman/Documents/GitHub/azure-ai-foundry-agents/agents/tools"
+]
